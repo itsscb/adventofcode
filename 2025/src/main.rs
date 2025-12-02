@@ -1,6 +1,10 @@
 use std::{fs::File, io::Read};
 
-use aoc25::{one::solve_one, three::solve_three, two::solve_two};
+use aoc25::{
+    one::solve_one,
+    three::{solve_four, solve_three},
+    two::solve_two,
+};
 
 fn main() {
     if let Ok(mut input) = File::open("inputs/one.txt") {
@@ -17,5 +21,7 @@ fn main() {
         input.read_to_end(&mut buf).unwrap();
         let result = solve_three(&buf);
         println!("Result Three: {result}");
+        let result = solve_four(&buf);
+        println!("Result Four: {result}");
     }
 }
