@@ -96,9 +96,6 @@ impl Safe {
 
             Rotation::R(r) => self.right(r),
         }
-        // if self.current == 0 {
-        //     self.counter += 1;
-        // }
     }
 
     pub fn get_counter(&self) -> u32 {
