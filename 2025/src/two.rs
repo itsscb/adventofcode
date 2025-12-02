@@ -22,6 +22,7 @@ mod test {
         assert_eq!(safe.get_counter(), 2);
         safe.rotate(Rotation::L(5));
         assert_eq!(safe.current, 95);
+        assert_eq!(safe.get_counter(), 2);
         safe.rotate(Rotation::R(60));
         assert_eq!(safe.current, 55);
         assert_eq!(safe.get_counter(), 3);
@@ -29,7 +30,6 @@ mod test {
         assert_eq!(safe.current, 0);
         assert_eq!(safe.get_counter(), 4);
 
-        // TODO: This shouldn't fail!
         safe.rotate(Rotation::L(1));
         assert_eq!(safe.current, 99);
         assert_eq!(safe.get_counter(), 4);
@@ -62,8 +62,12 @@ impl Default for Safe {
 
 impl Safe {
     fn right(&mut self, count: u32) {
-        self.current = (self.current + count) % 100;
+        let num = count % 100;
         self.counter += count / 100;
+        if self.current + num > 100 {
+            self.counter += 1;
+        }
+        self.current = (self.current + count) % 100;
         if self.current == 0 {
             self.counter += 1;
         }
@@ -74,7 +78,9 @@ impl Safe {
         if num <= self.current {
             self.current -= num;
         } else {
-            self.counter += 1;
+            if self.current != 0 {
+                self.counter += 1;
+            }
             self.current = 100 - (num - self.current);
         }
         if self.current == 0 {
@@ -123,7 +129,7 @@ impl From<&[u8]> for Rotation {
 pub fn solve_two(input: &[u8]) -> u32 {
     let mut safe = Safe::default();
     input
-        .split(|c| *c == b'\n')
+        .split(|c| *c == b'\r' || *c == b'\n')
         .filter(|line| !line.is_empty())
         .map(|line| Rotation::from(line))
         .for_each(|rotation| safe.rotate(rotation));

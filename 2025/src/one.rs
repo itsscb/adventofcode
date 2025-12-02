@@ -81,7 +81,7 @@ impl From<&[u8]> for Rotation {
 pub fn solve_one(input: &[u8]) -> u32 {
     let mut safe = Safe::default();
     input
-        .split(|c| *c == b'\n')
+        .split(|c| *c == b'\r' || *c == b'\n')
         .filter(|line| !line.is_empty())
         .map(|line| Rotation::from(line))
         .for_each(|rotation| safe.rotate(rotation));
