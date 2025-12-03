@@ -1,5 +1,5 @@
 #[derive(Debug, Clone)]
-struct Bank(String);
+pub(super) struct Bank(pub(super) String);
 
 impl<T: AsRef<[u8]>> From<T> for Bank {
     fn from(value: T) -> Self {
@@ -28,8 +28,8 @@ impl Bank {
     }
 }
 
-struct BatteryPack {
-    banks: Vec<Bank>,
+pub(super) struct BatteryPack {
+    pub(super) banks: Vec<Bank>,
 }
 
 impl<T: AsRef<[u8]>> From<T> for BatteryPack {
