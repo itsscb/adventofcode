@@ -60,7 +60,7 @@ impl<T: AsRef<[u8]>> From<T> for Range {
 }
 
 #[derive(Debug, Clone, Default)]
-struct Ranges {
+pub(super) struct Ranges {
     ranges: Vec<Range>,
 }
 
@@ -75,7 +75,7 @@ impl Ranges {
             .collect()
     }
 
-    fn sum_invalid_ids_thorough(&self) -> u64 {
+    pub(super) fn sum_invalid_ids_thorough(&self) -> u64 {
         self.find_invalid_ids_thorough().iter().sum()
     }
 
@@ -114,7 +114,4 @@ mod test {
 
 pub fn solve_three(input: &[u8]) -> u64 {
     Ranges::from(input).sum_invalid_ids()
-}
-pub fn solve_four(input: &[u8]) -> u64 {
-    Ranges::from(input).sum_invalid_ids_thorough()
 }
