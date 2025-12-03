@@ -1,9 +1,9 @@
 use std::{fs::File, io::Read};
 
 use aoc25::{
-    one::solve_one,
-    three::{solve_four, solve_three},
-    two::solve_two,
+    a_one::solve_one,
+    b_two::solve_two,
+    c_three::{solve_four, solve_three},
 };
 
 fn main() {
