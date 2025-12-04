@@ -2,7 +2,7 @@ use std::{fs::File, io::Read};
 
 use aoc25::{
     a_one::solve_one, b_two::solve_two, c_three::solve_three, d_four::solve_four,
-    e_five::solve_five,
+    e_five::solve_five, f_six::solve_six,
 };
 
 fn main() {
@@ -30,5 +30,7 @@ fn main() {
         input.read_to_end(&mut buf).unwrap();
         let result = solve_five(&buf);
         println!("Result Five: {result}");
+        let result = solve_six(&buf);
+        println!("Result Six: {result}");
     }
 }
