@@ -1,3 +1,4 @@
+#[allow(clippy::suspicious_map)]
 pub fn solve_seven(input: &[u8]) -> u32 {
     // SAFETY: input is valid UTF-8
     let input = unsafe { std::str::from_utf8_unchecked(input) };

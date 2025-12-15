@@ -6,7 +6,7 @@ impl<T: AsRef<[u8]>> From<T> for Bank {
         // SAFETY: We know that the input is valid UTF-8.
         let v = unsafe { std::str::from_utf8_unchecked(value.as_ref()) };
 
-        Self(String::from(v.replace("\n", "").replace("\r", "")))
+        Self(String::from(v))
     }
 }
 

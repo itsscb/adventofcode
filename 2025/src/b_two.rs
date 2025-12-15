@@ -114,12 +114,11 @@ impl From<&[u8]> for Rotation {
         let num: &[u8] = &value[1..];
         // SAFETY: Promised by input
         let num: u32 = std::str::from_utf8(num).unwrap().parse::<u32>().unwrap();
-        let res = match value[0] {
+         match value[0] {
             b'L' => Rotation::L(num),
             b'R' => Rotation::R(num),
             _ => unreachable!("should never happen"),
-        };
-        res
+        }
     }
 }
 
@@ -128,7 +127,7 @@ pub fn solve_two(input: &[u8]) -> u32 {
     input
         .split(|c| *c == b'\r' || *c == b'\n')
         .filter(|line| !line.is_empty())
-        .map(|line| Rotation::from(line))
+        .map(Rotation::from)
         .for_each(|rotation| safe.rotate(rotation));
     safe.counter
 }

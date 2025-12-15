@@ -38,7 +38,7 @@ fn check_id(id: &str) -> bool {
 
         window += 1;
     }
-    return false;
+false
 }
 
 impl<T: AsRef<[u8]>> From<T> for Range {
@@ -54,7 +54,6 @@ impl<T: AsRef<[u8]>> From<T> for Range {
         Self {
             start,
             end,
-            ..Default::default()
         }
     }
 }
@@ -92,7 +91,6 @@ impl<T: AsRef<[u8]>> From<T> for Ranges {
                 .split(|c| *c == b',')
                 .map(Range::from)
                 .collect(),
-            ..Default::default()
         }
     }
 }
