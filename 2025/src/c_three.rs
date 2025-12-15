@@ -8,7 +8,7 @@ impl Range {
     fn find_invalid(&self) -> Vec<u64> {
         (self.start..self.end)
             .filter(|&i| {
-                let s = format!("{}", i);
+                let s = format!("{i}");
                 let first = &s[0..s.len() / 2];
                 let second = &s[s.len() / 2..];
                 first == second
@@ -19,13 +19,14 @@ impl Range {
     fn find_invalid_thorough(&self) -> Vec<u64> {
         (self.start..self.end)
             .filter(|&i| {
-                let s = format!("{}", i);
+                let s = format!("{i}");
                 check_id(&s)
             })
             .collect()
     }
 }
 
+#[allow(clippy::unwrap_used)]
 fn check_id(id: &str) -> bool {
     let mut window = 1;
     while window < id.len() {
@@ -38,9 +39,10 @@ fn check_id(id: &str) -> bool {
 
         window += 1;
     }
-false
+    false
 }
 
+#[allow(clippy::fallible_impl_from, clippy::unwrap_used)]
 impl<T: AsRef<[u8]>> From<T> for Range {
     fn from(value: T) -> Self {
         let v: Vec<_> = value
@@ -50,11 +52,8 @@ impl<T: AsRef<[u8]>> From<T> for Range {
             .map(|s| unsafe { std::str::from_utf8_unchecked(s) })
             .collect();
         let start: u64 = v[0].parse().unwrap();
-        let end: u64 = v[1].replace("\r", "").replace("\n", "").parse().unwrap();
-        Self {
-            start,
-            end,
-        }
+        let end: u64 = v[1].parse().unwrap();
+        Self { start, end }
     }
 }
 
@@ -65,12 +64,12 @@ pub(super) struct Ranges {
 
 impl Ranges {
     fn find_invalid_ids(&self) -> Vec<u64> {
-        self.ranges.iter().flat_map(|r| r.find_invalid()).collect()
+        self.ranges.iter().flat_map(Range::find_invalid).collect()
     }
     fn find_invalid_ids_thorough(&self) -> Vec<u64> {
         self.ranges
             .iter()
-            .flat_map(|r| r.find_invalid_thorough())
+            .flat_map(Range::find_invalid_thorough)
             .collect()
     }
 
@@ -95,6 +94,11 @@ impl<T: AsRef<[u8]>> From<T> for Ranges {
     }
 }
 
+#[must_use]
+pub fn solve_three(input: &[u8]) -> u64 {
+    Ranges::from(input).sum_invalid_ids()
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -108,8 +112,4 @@ mod test {
         assert_eq!(range.end, 13);
         assert_eq!(range.find_invalid(), vec![11u64]);
     }
-}
-
-pub fn solve_three(input: &[u8]) -> u64 {
-    Ranges::from(input).sum_invalid_ids()
 }

@@ -7,7 +7,7 @@ mod test {
         let mut safe = Safe::default();
         assert_eq!(safe.current, 50);
 
-        safe.rotate(Rotation::L(68));
+        safe.rotate(&Rotation::L(68));
         assert_eq!(safe.current, 82);
     }
 }
@@ -28,11 +28,11 @@ impl Default for Safe {
 }
 
 impl Safe {
-    fn right(&mut self, count: u32) {
+    const fn right(&mut self, count: u32) {
         self.current = (self.current + count) % 100;
     }
 
-    fn left(&mut self, count: u32) {
+    const fn left(&mut self, count: u32) {
         let num = count % 100;
 
         self.current = if self.current >= num {
@@ -42,18 +42,19 @@ impl Safe {
         };
     }
 
-    pub fn rotate(&mut self, rotation: Rotation) {
+    pub const fn rotate(&mut self, rotation: &Rotation) {
         match rotation {
-            Rotation::L(r) => self.left(r),
+            Rotation::L(r) => self.left(*r),
 
-            Rotation::R(r) => self.right(r),
+            Rotation::R(r) => self.right(*r),
         }
         if self.current == 0 {
             self.counter += 1;
         }
     }
 
-    pub fn get_counter(&self) -> u32 {
+    #[must_use]
+    pub const fn get_counter(&self) -> u32 {
         self.counter
     }
 }
@@ -64,16 +65,19 @@ pub enum Rotation {
     R(u32),
 }
 
+#[allow(clippy::fallible_impl_from, clippy::unwrap_used)]
 impl From<&[u8]> for Rotation {
     fn from(value: &[u8]) -> Self {
         let num: &[u8] = &value[1..];
         // SAFETY: Promised by input
-        let num: u32 = std::str::from_utf8(num).unwrap().parse::<u32>().unwrap();
+        let num: u32 = unsafe { std::str::from_utf8_unchecked(num) }
+            .parse::<u32>()
+            .unwrap();
         match value[0] {
-            b'L' => Rotation::L(num),
-            b'R' => Rotation::R(num),
+            b'L' => Self::L(num),
+            b'R' => Self::R(num),
             _ => unreachable!("should never happen"),
-       }
+        }
     }
 }
 
@@ -83,6 +87,6 @@ pub fn solve_one(input: &[u8]) -> u32 {
         .split(|c| *c == b'\r' || *c == b'\n')
         .filter(|line| !line.is_empty())
         .map(Rotation::from)
-        .for_each(|rotation| safe.rotate(rotation));
+        .for_each(|rotation| safe.rotate(&rotation));
     safe.counter
 }

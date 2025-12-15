@@ -1,3 +1,4 @@
+#[must_use]
 pub fn solve_six(input: &[u8]) -> u64 {
     // SAFETY: input is valid UTF-8
     let input = unsafe { std::str::from_utf8_unchecked(input) };
@@ -14,7 +15,9 @@ pub fn solve_six(input: &[u8]) -> u64 {
                     }
                 }
             }
-            window[0..12].iter().fold(0u64, |a, &b| 10 * a + b as u64)
+            window[0..12]
+                .iter()
+                .fold(0u64, |a, &b| 0b1010 * a + u64::from(b))
         })
         .sum::<u64>()
 }

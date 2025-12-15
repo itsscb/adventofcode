@@ -11,15 +11,14 @@ impl<T: AsRef<[u8]>> From<T> for Bank {
 }
 
 impl Bank {
+    #[allow(clippy::unwrap_used)]
     fn tweak_joltage(&self) -> u8 {
         let mut max = 0u32;
-        let mut result = String::new();
         self.0.chars().enumerate().for_each(|(i, a)| {
             if let Some(b) = self.0.chars().skip(i + 1).max() {
                 let tmp = format!("{}{}", a.to_digit(10).unwrap(), b.to_digit(10).unwrap());
                 let sum = tmp.parse::<u32>().unwrap();
                 if sum > max {
-                    result = tmp;
                     max = sum;
                 }
             }
@@ -52,6 +51,7 @@ impl BatteryPack {
     }
 }
 
+#[must_use]
 pub fn solve_five(input: &[u8]) -> u128 {
     let pack = BatteryPack::from(input);
     pack.sum_of_tweaked_joltage()

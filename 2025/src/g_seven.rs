@@ -1,5 +1,6 @@
 #[allow(clippy::suspicious_map)]
-pub fn solve_seven(input: &[u8]) -> u32 {
+#[must_use]
+pub fn solve_seven(input: &[u8]) -> usize {
     // SAFETY: input is valid UTF-8
     let input = unsafe { std::str::from_utf8_unchecked(input) };
     input
@@ -23,7 +24,7 @@ pub fn solve_seven(input: &[u8]) -> u32 {
                 })
                 .count()
         })
-        .count() as u32
+        .count()
 }
 
 #[cfg(test)]
