@@ -17,20 +17,20 @@ pub fn solve_seven(input: &[u8]) -> usize {
     (0..lines[0].len())
         .flat_map(|x| (0..lines.len()).map(move |y| (x, y)))
         .filter(|&(x, y)| {
-            if let Some(y1) = lines.get(y) {
-                if let Some(x1) = y1.get(x) {
-                    return x1 == &b'@'
-                        && MATCHES
-                            .iter()
-                            .filter(|&(x2, y2)| {
-                                lines
-                                    .get(y.wrapping_add_signed(*y2))
-                                    .and_then(|r| r.get(x.wrapping_add_signed(*x2)))
-                                    .is_some_and(|&c| c == b'@')
-                            })
-                            .count()
-                            < 4;
-                }
+            if let Some(y1) = lines.get(y)
+                && let Some(x1) = y1.get(x)
+            {
+                return x1 == &b'@'
+                    && MATCHES
+                        .iter()
+                        .filter(|&(x2, y2)| {
+                            lines
+                                .get(y.wrapping_add_signed(*y2))
+                                .and_then(|r| r.get(x.wrapping_add_signed(*x2)))
+                                .is_some_and(|&c| c == b'@')
+                        })
+                        .count()
+                        < 4;
             }
             false
         })
