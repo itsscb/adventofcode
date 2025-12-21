@@ -1,11 +1,7 @@
 use std::collections::HashSet;
 
 pub fn solve_nine(input: &[u8]) -> usize {
-    let pos = input
-        .windows(2)
-        .position(|w| w == b"\n\n")
-        .expect("has been promised");
-    let (config, ingredients) = (&input[..pos], &input[pos + 2..]);
+    let (config, ingredients) = split_input(input);
 
     let minmax: HashSet<(u64, u64)> = config.split(|b| b == &b'\n').map(get_min_max).collect();
 
@@ -17,6 +13,30 @@ pub fn solve_nine(input: &[u8]) -> usize {
         .flatten()
         .filter(|i: &u64| minmax.iter().any(|(min, max)| i >= &min && i <= &max))
         .count()
+}
+
+// TODO: Fix this. It takes too long and will probably ignite RAM and CPU
+pub fn solve_ten(input: &[u8]) -> usize {
+    let (config, _) = split_input(input);
+
+    let mut range: HashSet<u64> = HashSet::new();
+    config
+        .split(|b| b == &b'\n')
+        .map(get_min_max)
+        .for_each(|(min, max)| {
+            for i in min..=max {
+                range.insert(i);
+            }
+        });
+    range.iter().count()
+}
+
+fn split_input(input: &[u8]) -> (&[u8], &[u8]) {
+    let pos = input
+        .windows(2)
+        .position(|w| w == b"\n\n")
+        .expect("has been promised");
+    (&input[..pos], &input[pos + 2..])
 }
 
 fn get_min_max(range: &[u8]) -> (u64, u64) {
@@ -37,7 +57,7 @@ fn get_min_max(range: &[u8]) -> (u64, u64) {
 
 #[cfg(test)]
 mod test {
-    use crate::i_nine::solve_nine;
+    use super::*;
 
     #[test]
     fn test_solve_nine() {
@@ -53,5 +73,20 @@ mod test {
 17
 32";
         assert_eq!(solve_nine(input), 3);
+    }
+    #[test]
+    fn test_solve_ten() {
+        let input = b"3-5
+10-14
+16-20
+12-18
+
+1
+5
+8
+11
+17
+32";
+        assert_eq!(solve_ten(input), 14);
     }
 }

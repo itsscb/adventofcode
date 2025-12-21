@@ -2,9 +2,15 @@
 use std::{fs::File, io::Read};
 
 use aoc25::{
-    a_one::solve_one, b_two::solve_two, c_three::solve_three, d_four::solve_four,
-    e_five::solve_five, f_six::solve_six, g_seven::solve_seven, h_eight::solve_eight,
-    i_nine::solve_nine,
+    a_one::solve_one,
+    b_two::solve_two,
+    c_three::solve_three,
+    d_four::solve_four,
+    e_five::solve_five,
+    f_six::solve_six,
+    g_seven::solve_seven,
+    h_eight::solve_eight,
+    i_nine::{solve_nine, solve_ten},
 };
 
 fn main() {
@@ -50,5 +56,7 @@ fn main() {
         input.read_to_end(&mut buf).unwrap();
         let result = solve_nine(&buf);
         println!("Result Nine: {result}");
+        let result = solve_ten(&buf);
+        println!("Result Ten: {result}");
     }
 }
