@@ -12,6 +12,7 @@ use aoc25::{
     h_eight::solve_eight,
     i_nine::{solve_nine, solve_ten},
     k_eleven::solve_eleven,
+    l_twelve::solve_twelve,
 };
 
 fn main() {
@@ -65,5 +66,7 @@ fn main() {
         input.read_to_end(&mut buf).unwrap();
         let result = solve_eleven(&buf);
         println!("Result Eleven: {result}");
+        let result = solve_twelve(&buf);
+        println!("Result Twelve: {result}");
     }
 }
