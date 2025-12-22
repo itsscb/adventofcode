@@ -11,6 +11,7 @@ use aoc25::{
     g_seven::solve_seven,
     h_eight::solve_eight,
     i_nine::{solve_nine, solve_ten},
+    k_eleven::solve_eleven,
 };
 
 fn main() {
@@ -58,5 +59,11 @@ fn main() {
         println!("Result Nine: {result}");
         let result = solve_ten(&buf);
         println!("Result Ten: {result}");
+    }
+    if let Ok(mut input) = File::open("inputs/eleven.txt") {
+        let mut buf: Vec<u8> = Vec::with_capacity(10_000);
+        input.read_to_end(&mut buf).unwrap();
+        let result = solve_eleven(&buf);
+        println!("Result Eleven: {result}");
     }
 }
