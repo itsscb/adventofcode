@@ -15,20 +15,28 @@ pub fn solve_nine(input: &[u8]) -> usize {
         .count()
 }
 
-// TODO: Fix this. It takes too long and will probably ignite RAM and CPU
-pub fn solve_ten(input: &[u8]) -> usize {
+pub fn solve_ten(input: &[u8]) -> u64 {
     let (config, _) = split_input(input);
 
-    let mut range: HashSet<u64> = HashSet::new();
-    config
-        .split(|b| b == &b'\n')
-        .map(get_min_max)
-        .for_each(|(min, max)| {
-            for i in min..=max {
-                range.insert(i);
-            }
-        });
-    range.iter().count()
+    let mut ranges: Vec<(u64, u64)> = config.split(|b| b == &b'\n').map(get_min_max).collect();
+    ranges.sort_unstable_by_key(|k| k.0);
+
+    let mut count = 0;
+
+    let mut range = ranges.into_iter();
+    let (mut curr_min, mut curr_max) = range.next().expect("first always given");
+
+    while let Some((min, max)) = range.next() {
+        if curr_max < min {
+            count += curr_max - curr_min + 1;
+            (curr_min, curr_max) = (min, max);
+        } else {
+            curr_max = curr_max.max(max);
+        }
+    }
+
+    count += curr_max - curr_min + 1;
+    count
 }
 
 fn split_input(input: &[u8]) -> (&[u8], &[u8]) {
