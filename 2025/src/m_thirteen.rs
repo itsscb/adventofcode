@@ -24,13 +24,12 @@ pub fn solve_thirteen(input: &[u8]) -> usize {
                 &*c == &'^' && lock.contains(i)
             })
             .for_each(|(i, _)| {
+                count += 1;
                 beams.insert(i.saturating_sub(1));
                 beams.insert(i.saturating_add(1));
                 let mut lock = active_beams.lock().unwrap();
                 lock.remove(&i);
             });
-        count += beams.iter().count();
-        dbg!(&line, &beams, count);
         let mut lock = active_beams.lock().unwrap();
         lock.extend(beams);
     }
