@@ -1,9 +1,3 @@
-#[derive(Debug, Clone, Copy, Hash, Eq, Ord, PartialEq, PartialOrd)]
-struct Point {
-    row: usize,
-    col: usize,
-}
-
 const MATCHES: [(isize, isize); 8] = [
     (-1, -1),
     (-1, 0),
@@ -14,6 +8,11 @@ const MATCHES: [(isize, isize); 8] = [
     (1, 0),
     (1, 1),
 ];
+#[derive(Debug, Clone, Copy, Hash, Eq, Ord, PartialEq, PartialOrd)]
+struct Point {
+    row: usize,
+    col: usize,
+}
 
 impl Point {
     fn neighbours(&self) -> Vec<Point> {
@@ -41,9 +40,37 @@ impl Point {
     }
 }
 
+#[allow(clippy::suspicious_map)]
 #[must_use]
-pub fn solve_eight(input: &[u8]) -> usize {
-    let input = std::str::from_utf8(input).unwrap();
+pub fn part1(input: &[u8]) -> usize {
+    let lines: Vec<_> = input.split(|b| b == &b'\n').collect();
+
+    (0..lines[0].len())
+        .flat_map(|x| (0..lines.len()).map(move |y| (x, y)))
+        .filter(|&(x, y)| {
+            if let Some(y1) = lines.get(y)
+                && let Some(x1) = y1.get(x)
+            {
+                return x1 == &b'@'
+                    && MATCHES
+                        .iter()
+                        .filter(|&(x2, y2)| {
+                            lines
+                                .get(y.wrapping_add_signed(*y2))
+                                .and_then(|r| r.get(x.wrapping_add_signed(*x2)))
+                                .is_some_and(|&c| c == b'@')
+                        })
+                        .count()
+                        < 4;
+            }
+            false
+        })
+        .count()
+}
+
+#[must_use]
+pub fn part2(input: &[u8]) -> usize {
+    let input = unsafe { std::str::from_utf8_unchecked(input) };
     part_2(input)
 }
 
@@ -81,7 +108,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_solve_eight() {
+    fn test_part2() {
         let input = b"..@@.@@@@.
 @@@.@.@.@@
 @@@@@.@.@@
@@ -92,6 +119,21 @@ mod tests {
 @.@@@.@@@@
 .@@@@@@@@.
 @.@.@@@.@.";
-        assert_eq!(solve_eight(input), 43);
+        assert_eq!(part2(input), 43);
+    }
+
+    #[test]
+    fn test_part1() {
+        let input = b"..@@.@@@@.
+@@@.@.@.@@
+@@@@@.@.@@
+@.@@@@..@.
+@@.@@@@.@@
+.@@@@@@@.@
+.@.@.@.@@@
+@.@@@.@@@@
+.@@@@@@@@.
+@.@.@@@.@.";
+        assert_eq!(part1(input), 13);
     }
 }

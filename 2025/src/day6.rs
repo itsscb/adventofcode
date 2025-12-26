@@ -1,12 +1,56 @@
-pub fn solve_twelve(input: &[u8]) -> u64 {
+#![allow(clippy::missing_panics_doc)]
+#[must_use]
+pub fn part1(input: &[u8]) -> u64 {
     let input = unsafe { std::str::from_utf8_unchecked(input) };
 
     let operators: Vec<&str> = input
         .lines()
         .rev()
         .take(1)
-        .map(|line| line.split("").collect::<Vec<&str>>())
-        .flatten()
+        .flat_map(|line| line.split(' ').collect::<Vec<&str>>())
+        .collect();
+
+    let rows: Vec<Vec<u64>> = input
+        .lines()
+        .rev()
+        .skip(1)
+        .map(|line| {
+            line.split(' ')
+                .filter(|txt| !txt.is_empty())
+                .map(|num| num.parse::<u64>().unwrap())
+                .collect::<Vec<u64>>()
+        })
+        .collect();
+
+    let mut count = 0u64;
+
+    operators
+        .iter()
+        .filter(|txt| !txt.is_empty())
+        .enumerate()
+        .for_each(|(i, op)| {
+            let itr = rows.iter().map(|col| col[i]);
+            let res: u64 = match *op {
+                "+" => itr.sum(),
+                "*" => itr.product(),
+                _ => unreachable!("was promised + or *"),
+            };
+
+            count += res;
+        });
+
+    count
+}
+
+#[must_use]
+pub fn part2(input: &[u8]) -> u64 {
+    let input = unsafe { std::str::from_utf8_unchecked(input) };
+
+    let operators: Vec<&str> = input
+        .lines()
+        .rev()
+        .take(1)
+        .flat_map(|line| line.split("").collect::<Vec<&str>>())
         .filter(|i| !i.is_empty())
         .collect();
 
@@ -82,11 +126,20 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_solve_twelve() {
+    fn test_part2() {
         let input = b"123 328  51 64 
  45 64  387 23 
   6 98  215 314
 *   +   *   +  ";
-        assert_eq!(solve_twelve(input), 3263827);
+        assert_eq!(part2(input), 3_263_827);
+    }
+
+    #[test]
+    fn test_part1() {
+        let input = b"123 328  51 64 
+ 45 64  387 23 
+  6 98  215 314
+*   +   *   +  ";
+        assert_eq!(part1(input), 4_277_556);
     }
 }

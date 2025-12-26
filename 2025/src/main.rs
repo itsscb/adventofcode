@@ -1,81 +1,70 @@
 #![allow(clippy::unwrap_used)]
 use std::{fs::File, io::Read};
 
-use aoc25::{
-    a_one::solve_one,
-    b_two::solve_two,
-    c_three::solve_three,
-    d_four::solve_four,
-    e_five::solve_five,
-    f_six::solve_six,
-    g_seven::solve_seven,
-    h_eight::solve_eight,
-    i_nine::{solve_nine, solve_ten},
-    k_eleven::solve_eleven,
-    l_twelve::solve_twelve,
-    m_thirteen::solve_thirteen,
-};
+use aoc25::{day1, day2, day3, day4, day5, day6, day7};
 
 fn main() {
-    if let Ok(mut input) = File::open("inputs/one.txt") {
+    if let Ok(mut input) = File::open("inputs/day1.txt") {
         let mut buf: Vec<u8> = Vec::with_capacity(10_000);
         input.read_to_end(&mut buf).unwrap();
-        let result = solve_one(&buf);
-        println!("Result One: {result}");
+        let result = day1::part1(&buf);
+        println!("Result Day 1 Part 1: {result}");
 
-        let result = solve_two(&buf);
-        println!("Result Two: {result}");
+        let result = day1::part2(&buf);
+        println!("Result Day 1 Part 2: {result}");
     }
 
-    if let Ok(mut input) = File::open("inputs/three.txt") {
+    if let Ok(mut input) = File::open("inputs/day2.txt") {
         let mut buf: Vec<u8> = Vec::with_capacity(10_000);
         input.read_to_end(&mut buf).unwrap();
-        let result = solve_three(&buf);
-        println!("Result Three: {result}");
-        let result = solve_four(&buf);
-        println!("Result Four: {result}");
+        let result = day2::part1(&buf);
+        println!("Result Day 2 Part 1: {result}");
+        let result = day2::part2(&buf);
+        println!("Result Day 2 Part 2: {result}");
     }
 
-    if let Ok(mut input) = File::open("inputs/five.txt") {
+    if let Ok(mut input) = File::open("inputs/day3.txt") {
         let mut buf: Vec<u8> = Vec::with_capacity(10_000);
         input.read_to_end(&mut buf).unwrap();
-        let result = solve_five(&buf);
-        println!("Result Five: {result}");
-        let result = solve_six(&buf);
-        println!("Result Six: {result}");
+        let result = day3::part1(&buf);
+        println!("Result Day 3 Part 1: {result}");
+        let result = day3::part2(&buf);
+        println!("Result Day 3 Part 2: {result}");
     }
 
-    if let Ok(mut input) = File::open("inputs/seven.txt") {
+    if let Ok(mut input) = File::open("inputs/day4.txt") {
         let mut buf: Vec<u8> = Vec::with_capacity(10_000);
         input.read_to_end(&mut buf).unwrap();
-        let result = solve_seven(&buf);
-        println!("Result Seven: {result}");
-        let result = solve_eight(&buf);
-        println!("Result Eight: {result}");
+        let result = day4::part1(&buf);
+        println!("Result Day 4 Part 1: {result}");
+        let result = day4::part2(&buf);
+        println!("Result Day 4 Part 2: {result}");
     }
 
-    if let Ok(mut input) = File::open("inputs/nine.txt") {
+    if let Ok(mut input) = File::open("inputs/day5.txt") {
         let mut buf: Vec<u8> = Vec::with_capacity(10_000);
         input.read_to_end(&mut buf).unwrap();
-        let result = solve_nine(&buf);
-        println!("Result Nine: {result}");
-        let result = solve_ten(&buf);
-        println!("Result Ten: {result}");
+        let result = day5::part1(&buf);
+        println!("Result Day 5 Part 1: {result}");
+        let result = day5::part2(&buf);
+        println!("Result Day 5 Part 2: {result}");
     }
 
-    if let Ok(mut input) = File::open("inputs/eleven.txt") {
+    if let Ok(mut input) = File::open("inputs/day6.txt") {
         let mut buf: Vec<u8> = Vec::with_capacity(10_000);
         input.read_to_end(&mut buf).unwrap();
-        let result = solve_eleven(&buf);
-        println!("Result Eleven: {result}");
-        let result = solve_twelve(&buf);
-        println!("Result Twelve: {result}");
+        let result = day6::part1(&buf);
+        println!("Result Day 6 Part 1: {result}");
+        let result = day6::part2(&buf);
+        println!("Result Day 6 Part 2: {result}");
     }
 
-    if let Ok(mut input) = File::open("inputs/thirteen.txt") {
+    if let Ok(mut input) = File::open("inputs/day7.txt") {
         let mut buf: Vec<u8> = Vec::with_capacity(10_000);
         input.read_to_end(&mut buf).unwrap();
-        let result = solve_thirteen(&buf);
-        println!("Result Thirteen: {result}");
+        let result = day7::part1(&buf);
+        println!("Result Day 7 Part 1: {result}");
+        let result = day7::part2(&buf);
+        println!("Result Day 7 Part 2: {result}");
     }
 }

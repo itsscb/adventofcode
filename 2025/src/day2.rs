@@ -95,10 +95,14 @@ impl<T: AsRef<[u8]>> From<T> for Ranges {
 }
 
 #[must_use]
-pub fn solve_three(input: &[u8]) -> u64 {
+pub fn part1(input: &[u8]) -> u64 {
     Ranges::from(input).sum_invalid_ids()
 }
 
+#[must_use]
+pub fn part2(input: &[u8]) -> u64 {
+    Ranges::from(input).sum_invalid_ids_thorough()
+}
 #[cfg(test)]
 mod test {
     use super::*;

@@ -52,9 +52,33 @@ impl BatteryPack {
 }
 
 #[must_use]
-pub fn solve_five(input: &[u8]) -> u128 {
+pub fn part1(input: &[u8]) -> u128 {
     let pack = BatteryPack::from(input);
     pack.sum_of_tweaked_joltage()
+}
+
+#[must_use]
+pub fn part2(input: &[u8]) -> u64 {
+    // SAFETY: input is valid UTF-8
+    let input = unsafe { std::str::from_utf8_unchecked(input) };
+    input
+        .lines()
+        .map(|line| {
+            let mut window: [u8; 13] = [0; 13];
+            for bytes in line.bytes() {
+                window[12] = bytes - b'0';
+                for index in 0..12 {
+                    if window[index] < window[index + 1] {
+                        window.copy_within(index + 1..13, index);
+                        break;
+                    }
+                }
+            }
+            window[0..12]
+                .iter()
+                .fold(0u64, |a, &b| 0b1010 * a + u64::from(b))
+        })
+        .sum::<u64>()
 }
 
 #[cfg(test)]

@@ -1,21 +1,22 @@
+#![allow(clippy::missing_panics_doc)]
 use std::collections::HashSet;
 
-pub fn solve_nine(input: &[u8]) -> usize {
+#[must_use]
+pub fn part1(input: &[u8]) -> usize {
     let (config, ingredients) = split_input(input);
 
     let minmax: HashSet<(u64, u64)> = config.split(|b| b == &b'\n').map(get_min_max).collect();
 
     ingredients
         .split(|b| b == &b'\n')
-        .map(std::str::from_utf8)
-        .flatten()
-        .map(|i| i.parse())
-        .flatten()
-        .filter(|i: &u64| minmax.iter().any(|(min, max)| i >= &min && i <= &max))
+        .flat_map(std::str::from_utf8)
+        .flat_map(str::parse)
+        .filter(|i: &u64| minmax.iter().any(|(min, max)| i >= min && i <= max))
         .count()
 }
 
-pub fn solve_ten(input: &[u8]) -> u64 {
+#[must_use]
+pub fn part2(input: &[u8]) -> u64 {
     let (config, _) = split_input(input);
 
     let mut ranges: Vec<(u64, u64)> = config.split(|b| b == &b'\n').map(get_min_max).collect();
@@ -26,7 +27,7 @@ pub fn solve_ten(input: &[u8]) -> u64 {
     let mut range = ranges.into_iter();
     let (mut curr_min, mut curr_max) = range.next().expect("first always given");
 
-    while let Some((min, max)) = range.next() {
+    for (min, max) in range {
         if curr_max < min {
             count += curr_max - curr_min + 1;
             (curr_min, curr_max) = (min, max);
@@ -80,7 +81,7 @@ mod test {
 11
 17
 32";
-        assert_eq!(solve_nine(input), 3);
+        assert_eq!(part1(input), 3);
     }
     #[test]
     fn test_solve_ten() {
@@ -95,6 +96,6 @@ mod test {
 11
 17
 32";
-        assert_eq!(solve_ten(input), 14);
+        assert_eq!(part2(input), 14);
     }
 }
