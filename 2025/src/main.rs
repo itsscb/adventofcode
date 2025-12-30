@@ -1,7 +1,7 @@
 #![allow(clippy::unwrap_used)]
 use std::{fs::File, io::Read};
 
-use aoc25::{day1, day2, day3, day4, day5, day6, day7};
+use aoc25::{day1, day2, day3, day4, day5, day6, day7, day8};
 
 fn main() {
     if let Ok(mut input) = File::open("inputs/day1.txt") {
@@ -66,5 +66,14 @@ fn main() {
         println!("Result Day 7 Part 1: {result}");
         let result = day7::part2(&buf);
         println!("Result Day 7 Part 2: {result}");
+    }
+
+    if let Ok(mut input) = File::open("inputs/day8.txt") {
+        let mut buf: Vec<u8> = Vec::with_capacity(10_000);
+        input.read_to_end(&mut buf).unwrap();
+        let result = day8::part1(&buf);
+        println!("Result Day 8 Part 1: {result}");
+        let result = day8::part2(&buf);
+        println!("Result Day 8 Part 2: {result}");
     }
 }

@@ -1,4 +1,4 @@
-use std::{collections::HashSet, u64};
+use std::collections::HashSet;
 
 #[derive(Debug, Clone, PartialEq, PartialOrd, Default, Eq, Ord, Hash)]
 struct Position {
@@ -12,7 +12,7 @@ impl<T: AsRef<str>> From<T> for Position {
         let mut s: Self = Self::default();
         value
             .as_ref()
-            .split(|c| c == ',')
+            .split(',')
             .enumerate()
             .take(3)
             .map(|(i, v)| (i, v.parse::<u64>().expect("was promised")))
@@ -29,40 +29,55 @@ impl<T: AsRef<str>> From<T> for Position {
 #[must_use]
 #[allow(dead_code)]
 fn get_distance(a: &Position, b: &Position) -> u64 {
-    ((a.x - b.x) ^ 2 + (a.y - b.y) ^ 2 + (a.z - b.z) ^ 2).isqrt()
+    (a.x.abs_diff(b.x)).pow(2) + (a.y.abs_diff(b.y)).pow(2) + (a.z.abs_diff(b.z)).pow(2)
 }
 
-fn get_next<'a>(positions: &'a Vec<Position>, current: &'a Position) -> &'a Position {
-    let mut min_distance = u64::MAX;
-    let mut pos = 0usize;
-    positions
-        .iter()
-        .map(|p| get_distance(current, p))
-        .enumerate()
-        .for_each(|(i, p)| {
-            if p < min_distance {
-                min_distance = p;
-                pos = i;
-            }
-        });
-
-    &positions[pos]
+#[must_use]
+pub fn part2(_input: &[u8]) -> usize {
+    0
 }
 
 pub fn part1(input: &[u8]) -> usize {
+    const MAX: i32 = if cfg!(test) { 10 } else { 1000 };
+
     let input = unsafe { std::str::from_utf8_unchecked(input) };
-    let mut circuits: Vec<HashSet<Position>> = vec![HashSet::with_capacity(10); 1000];
     let positions: Vec<Position> = input.lines().map(Position::from).collect();
 
-    positions
-        .iter()
-        .map(|p| (p, get_next(&positions, p)))
-        .enumerate()
-        .for_each(|(i, (a, b))| {
-            circuits[i].insert(a.clone());
-            circuits[i].insert(b.clone());
-        });
-    0
+    let mut pairs: Vec<(usize, usize, u64)> = vec![];
+
+    for (i, p1) in positions.iter().enumerate() {
+        for (j, p2) in positions.iter().enumerate().filter(|(j, _)| &i != j) {
+            let dist = get_distance(p1, p2);
+            pairs.push((i, j, dist));
+        }
+    }
+
+    pairs.sort_by(|a, b| Ord::cmp(&b.2, &a.2));
+
+    let mut circs: Vec<HashSet<usize>> = vec![];
+    let mut count = 0;
+
+    for (a, b, _) in pairs {
+        if count >= MAX {
+            break;
+        }
+        let index = circs.iter().position(|p| p.contains(&a));
+        if let Some(index) = index {
+            circs[index].insert(b);
+            count += 1;
+            continue;
+        }
+        let index = circs.iter().position(|p| p.contains(&b));
+        if let Some(index) = index {
+            circs[index].insert(a);
+            count += 1;
+            continue;
+        }
+
+        circs.push(HashSet::from([a, b]));
+    }
+    dbg!(&circs);
+    circs.iter().take(3).map(|h| dbg!(h.len())).product()
 }
 
 #[cfg(test)]
